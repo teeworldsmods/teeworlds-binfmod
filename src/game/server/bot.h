@@ -9,7 +9,7 @@
 #include "ai/genetics.h"
 
 const char g_BotClan[12] = "Love";
-const char g_BotName[MAX_CLIENTS][16] = {
+const char g_aBotName[MAX_CLIENTS][16] = {
 	"Anna",
 	"Bob",
 	"Carlos",
@@ -123,11 +123,7 @@ public:
 	CBot(class CBotEngine *m_pBotEngine, CPlayer *pPlayer);
 	virtual ~CBot();
 
-
 	int m_GenomeTick;
-
-	const char *GetName();
-	const char *GetClan() { return g_BotClan; }
 
 	int GetID() { return m_SnapID; }
 	void Snap(int SnappingClient);

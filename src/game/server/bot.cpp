@@ -49,7 +49,7 @@ void CBot::OnReset()
 	m_Genetics.NextGenome();
 	m_GenomeTick = 0;
 	UpdateTargetOrder();
-	dbg_msg("bot", "%s has new target order %d %d %d %d %d %d %d %d", GetName(), m_aTargetOrder[0], m_aTargetOrder[1], m_aTargetOrder[2], m_aTargetOrder[3], m_aTargetOrder[4], m_aTargetOrder[5], m_aTargetOrder[6], m_aTargetOrder[7]);
+	dbg_msg("bot", "%s has new target order %d %d %d %d %d %d %d %d", GameServer()->Server()->ClientName(m_pPlayer->GetCID()), m_aTargetOrder[0], m_aTargetOrder[1], m_aTargetOrder[2], m_aTargetOrder[3], m_aTargetOrder[4], m_aTargetOrder[5], m_aTargetOrder[6], m_aTargetOrder[7]);
 }
 
 void CBot::UpdateTargetOrder()
@@ -317,7 +317,7 @@ void CBot::Tick()
 	UpdateTarget();
 
 	if(m_ComputeTarget.m_NeedUpdate)
-		dbg_msg("bot", "%s : new target pos=(%f,%f) type=%d", GetName(), m_ComputeTarget.m_Pos.x, m_ComputeTarget.m_Pos.y, m_ComputeTarget.m_Type);
+		dbg_msg("bot", "%s : new target pos=(%f,%f) type=%d", GameServer()->Server()->ClientName(m_pPlayer->GetCID()), m_ComputeTarget.m_Pos.x, m_ComputeTarget.m_Pos.y, m_ComputeTarget.m_Type);
 
 	UpdateEdge();
 
@@ -790,10 +790,6 @@ void CBot::Snap(int SnappingClient)
 	}
 }
 
-const char *CBot::GetName() {
-	return g_BotName[m_pPlayer->GetCID()];
-}
-
 const char *CBot::GetRepartee() {
 	if(!m_pPlayer->Infected())
 		return "Shut up and kill !";
@@ -811,10 +807,8 @@ void CBot::OnChatMessage(int SenderClientId)
 
 void CBot::SayTo(int ClientId, const char* pMessage)
 {
-	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientId];
-	const char* senderName = (pPlayer->IsBot() && pPlayer->m_pBot)? pPlayer->m_pBot->GetName() : GameServer()->Server()->ClientName(ClientId);
 	char message[127];
-	str_format(message, 127, "%s: %s", senderName, pMessage);
+	str_format(message, 127, "%s: %s", GameServer()->Server()->ClientName(ClientId), pMessage);
 	Say(message);
 }
 
