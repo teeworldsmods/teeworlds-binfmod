@@ -681,8 +681,6 @@ void CGameContext::OnClientDrop(int ClientID, const char *pReason)
 		if(m_apPlayers[i] && m_apPlayers[i]->m_SpectatorID == ClientID)
 			m_apPlayers[i]->m_SpectatorID = SPEC_FREEVIEW;
 	}
-
-	CheckBotNumber();
 }
 
 void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
@@ -784,9 +782,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 						continue;
 					if((m_apPlayers[i]->IsBot() && m_apPlayers[i]->m_pBot) &&
 						str_comp_nocase_num(pMsg->m_pMessage,
-												m_apPlayers[i]->m_pBot->GetName(),
-												str_length(m_apPlayers[i]->m_pBot->GetName())) == 0 &&
-						pMsg->m_pMessage[str_length(m_apPlayers[i]->m_pBot->GetName())] == ':')
+                                            Server()->ClientName(i),
+												str_length(Server()->ClientName(i))) == 0 &&
+						pMsg->m_pMessage[str_length(Server()->ClientName(i))] == ':')
 
 					{
 						m_apPlayers[i]->m_pBot->OnChatMessage(ClientID);
@@ -2003,6 +2001,9 @@ void CGameContext::CheckBotNumber() {
 				m_apPlayers[LastFreeSlot] = new(LastFreeSlot) CPlayer(this, LastFreeSlot, StartTeam);
 				m_apPlayers[LastFreeSlot]->m_IsBot = true;
 				m_apPlayers[LastFreeSlot]->m_pBot = new CBot(m_pBotEngine, m_apPlayers[LastFreeSlot]);
+				Server()->NewBot(LastFreeSlot);
+				Server()->SetClientName(LastFreeSlot, g_aBotName[LastFreeSlot]);
+				Server()->SetClientClan(LastFreeSlot, g_BotClan);
 			}
 		}
 	}
@@ -2148,7 +2149,7 @@ void CGameContext::WhisperID(int ClientID, int VictimID, const char *pMessage)
 	else
 	{
 */
-		str_format(aBuf, sizeof(aBuf), "[→ %s] %s", (m_apPlayers[VictimID]->IsBot() && m_apPlayers[VictimID]->m_pBot)? m_apPlayers[VictimID]->m_pBot->GetName() : Server()->ClientName(VictimID), pMessage);
+		str_format(aBuf, sizeof(aBuf), "[→ %s] %s", Server()->ClientName(VictimID), pMessage);
 		SendChatTarget(ClientID, aBuf);
 	}
 
@@ -2169,7 +2170,7 @@ void CGameContext::WhisperID(int ClientID, int VictimID, const char *pMessage)
 	else
 	{
 */
-		str_format(aBuf, sizeof(aBuf), "[← %s] %s", (m_apPlayers[ClientID]->IsBot() && m_apPlayers[ClientID]->m_pBot)? m_apPlayers[ClientID]->m_pBot->GetName() : Server()->ClientName(ClientID), pMessage);
+		str_format(aBuf, sizeof(aBuf), "[← %s] %s", Server()->ClientName(ClientID), pMessage);
 		SendChatTarget(VictimID, aBuf);
 	}
 }

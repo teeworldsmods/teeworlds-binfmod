@@ -92,10 +92,7 @@ int CGameControllerInfection::OnCharacterDeath(CCharacter *pVictim, CPlayer *pKi
             pKiller->m_HasSuperJump = true;
             GameServer()->SendBroadcast("You earned super jump, hold spacebar to use it", pKiller->GetCID());
             char str[512] = {0};
-            if(pKiller->IsBot() && pKiller->m_pBot)
-				sprintf(str, g_Config.m_InfSuperJumpText, pKiller->m_pBot->GetName());
-			else
-				sprintf(str, g_Config.m_InfSuperJumpText, Server()->ClientName(pKiller->GetCID()));
+			sprintf(str, g_Config.m_InfSuperJumpText, Server()->ClientName(pKiller->GetCID()));
             GameServer()->SendChatTarget(-1, str);
         }
     } else {
@@ -104,10 +101,7 @@ int CGameControllerInfection::OnCharacterDeath(CCharacter *pVictim, CPlayer *pKi
             pKiller->m_HasAirstrike = true;
             GameServer()->SendBroadcast("You got an airstrike, use hammer to launch it :D", pKiller->GetCID());
             char str[512] = {0};
-            if(pKiller->IsBot() && pKiller->m_pBot)
-				sprintf(str, g_Config.m_InfAirstrikeText, pKiller->m_pBot->GetName());
-			else
-				sprintf(str, g_Config.m_InfAirstrikeText, Server()->ClientName(pKiller->GetCID()));
+			sprintf(str, g_Config.m_InfAirstrikeText, Server()->ClientName(pKiller->GetCID()));
             GameServer()->SendChatTarget(-1, str);
         }
     }
